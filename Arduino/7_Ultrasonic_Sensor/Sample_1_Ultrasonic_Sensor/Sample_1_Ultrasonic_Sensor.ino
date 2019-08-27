@@ -63,7 +63,7 @@ void loop()
   delayMicroseconds(10);               
 
   // (2) : Waveform length - the time from the launch
-           of the ultrasound to the return
+  //       of the ultrasound to the return
   digitalWrite(trigPin, LOW);
   // pulseIn(pin_number, pulse)
   // Read a pulse (HIGH or LOW) on the pin.
