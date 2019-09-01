@@ -1,42 +1,40 @@
 <<<<<<< HEAD
 //******************************************************//
-// Temperature Sensor
-// Sample Code 2 [Control the temperature sensor]
+// Ambient Light Sensor
+// Sample Code 3
 //                                      - Kyung-Sik Jang//
 //******************************************************//
 
 #include <WiFi.h>
 #include <IoTStarterKit_WiFi.h>
 #include <OneWire.h>
-#include <DallasTemperature.h>
 
 IoTMakers g_im;
 
 // For example...
-// #define deviceID    "nch207D1565936279095"
-// #define authnRqtNo  "6hhkxlhrq"
-// #define extrSysID   "OPEN_TCP_001PTL001_1000007578"
+ #define deviceID    "nch207D1566398498413"
+ #define authnRqtNo  "m3yi1o9q3"
+ #define extrSysID   "OPEN_TCP_001PTL001_1000007578"
+
+ #define WIFI_SSID   "ICT-LAB-2.4G"
+ #define WIFI_PASS   "12345678"
+
+//#define deviceID    "{YOUR_DEVICE_ID}"
+//#define authnRqtNo  "{YOUR_DEVICE_PASSWORD}"
+//#define extrSysID   "{YOUR_GATEWAY_ID}"
 //
-// #define WIFI_SSID   "jangLab"
-// #define WIFI_PASS   "emsys2019"
+//#define WIFI_SSID   "{WIFI_NAME}"
+//#define WIFI_PASS   "{WIFI_PASSWORD}"
 
-#define deviceID    "{YOUR_DEVICE_ID}"
-#define authnRqtNo  "{YOUR_DEVICE_PASSWORD}"
-#define extrSysID   "{YOUR_GATEWAY_ID}"
-
-#define WIFI_SSID   "{WIFI_NAME}"
-#define WIFI_PASS   "{WIFI_PASSWORD}"
-
-#define ONE_WIRE_BUS 2
+#include <Servo.h>
+Servo myServo;
+int _angle = 0;
 
 // ************************************************************************ //
 // Very Important!!!!
 // IoTMakers tag stream id must be the same below !!!
-#define TAG_ID "Temperature"
+#define TAG_ID "SERVO"
 // ************************************************************************ //
-
-OneWire ourWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&ourWire);
 
 void init_iotmakers()
 {
@@ -73,7 +71,7 @@ void init_iotmakers()
 void setup() {
   Serial.begin(9600);
 
-  sensors.begin();
+  myServo.attach(5);
   
   init_iotmakers();
 }
@@ -88,71 +86,74 @@ void loop() {
 
   if((millis() - tick) > 1000)
   {
-    send_temperature();
+    send_servo();
     tick = millis();
   }
 
   g_im.loop();
+Serial.println(_angle);
 }
 
-int send_temperature()
+int send_servo()
 {
-  // This Scope is package of temperature sensor
-  // Raw coding (with register address) look at "5_Temperature_Sensor Project"
-  sensors.requestTemperatures();
-  int data = sensors.getTempCByIndex(0);
-
-  Serial.print("Temperature : ");
-  Serial.print(data);
-  Serial.println(" Celsius");
   
+  
+  _angle += 20;
+  if(_angle > 180)
+    _angle = 0;
+  delay(20);
+  myServo.write(_angle);
+  delay(100);
+//  myServo.detach();
+  
+  
+   
+  int data = _angle;
   if(g_im.send_numdata(TAG_ID, (double)data) < 0)
   {
     Serial.println(F("fail"));
     return -1;
   }
-
+  
   return 0;
 }
 =======
 //******************************************************//
-// Temperature Sensor
-// Sample Code 2 [Control the temperature sensor]
+// Ambient Light Sensor
+// Sample Code 3
 //                                      - Kyung-Sik Jang//
 //******************************************************//
 
 #include <WiFi.h>
 #include <IoTStarterKit_WiFi.h>
 #include <OneWire.h>
-#include <DallasTemperature.h>
 
 IoTMakers g_im;
 
 // For example...
-// #define deviceID    "nch207D1565936279095"
-// #define authnRqtNo  "6hhkxlhrq"
-// #define extrSysID   "OPEN_TCP_001PTL001_1000007578"
+ #define deviceID    "nch207D1566398498413"
+ #define authnRqtNo  "m3yi1o9q3"
+ #define extrSysID   "OPEN_TCP_001PTL001_1000007578"
+
+ #define WIFI_SSID   "ICT-LAB-2.4G"
+ #define WIFI_PASS   "12345678"
+
+//#define deviceID    "{YOUR_DEVICE_ID}"
+//#define authnRqtNo  "{YOUR_DEVICE_PASSWORD}"
+//#define extrSysID   "{YOUR_GATEWAY_ID}"
 //
-// #define WIFI_SSID   "jangLab"
-// #define WIFI_PASS   "emsys2019"
+//#define WIFI_SSID   "{WIFI_NAME}"
+//#define WIFI_PASS   "{WIFI_PASSWORD}"
 
-#define deviceID    "{YOUR_DEVICE_ID}"
-#define authnRqtNo  "{YOUR_DEVICE_PASSWORD}"
-#define extrSysID   "{YOUR_GATEWAY_ID}"
-
-#define WIFI_SSID   "{WIFI_NAME}"
-#define WIFI_PASS   "{WIFI_PASSWORD}"
-
-#define ONE_WIRE_BUS 2
+#include <Servo.h>
+Servo myServo;
+int _angle = 0;
 
 // ************************************************************************ //
 // Very Important!!!!
 // IoTMakers tag stream id must be the same below !!!
-#define TAG_ID "Temperature"
+#define TAG_ID "SERVO"
 // ************************************************************************ //
-
-OneWire ourWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&ourWire);
 
 void init_iotmakers()
 {
@@ -189,7 +190,7 @@ void init_iotmakers()
 void setup() {
   Serial.begin(9600);
 
-  sensors.begin();
+  myServo.attach(5);
   
   init_iotmakers();
 }
@@ -204,30 +205,35 @@ void loop() {
 
   if((millis() - tick) > 1000)
   {
-    send_temperature();
+    send_servo();
     tick = millis();
   }
 
   g_im.loop();
+Serial.println(_angle);
 }
 
-int send_temperature()
+int send_servo()
 {
-  // This Scope is package of temperature sensor
-  // Raw coding (with register address) look at "5_Temperature_Sensor Project"
-  sensors.requestTemperatures();
-  int data = sensors.getTempCByIndex(0);
-
-  Serial.print("Temperature : ");
-  Serial.print(data);
-  Serial.println(" Celsius");
   
+  
+  _angle += 20;
+  if(_angle > 180)
+    _angle = 0;
+  delay(20);
+  myServo.write(_angle);
+  delay(100);
+//  myServo.detach();
+  
+  
+   
+  int data = _angle;
   if(g_im.send_numdata(TAG_ID, (double)data) < 0)
   {
     Serial.println(F("fail"));
     return -1;
   }
-
+  
   return 0;
 }
 >>>>>>> 65ce0e37ce30ec12ab73a81303229268e8e393d3
